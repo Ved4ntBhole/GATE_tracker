@@ -45,6 +45,8 @@ def process_video(video_source):
             try:
                 landmarks = results.pose_landmarks.landmark
                 
+                shoulder_l = [landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].x, landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].y, landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].z]
+                shoulder_r = [landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value].x, landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value].y, landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value].z]
                 hip_l = [landmarks[mp_pose.PoseLandmark.LEFT_HIP.value].x, landmarks[mp_pose.PoseLandmark.LEFT_HIP.value].y, landmarks[mp_pose.PoseLandmark.LEFT_HIP.value].z]
                 hip_r = [landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value].x, landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value].y, landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value].z]
                 knee_l = [landmarks[mp_pose.PoseLandmark.LEFT_KNEE.value].x, landmarks[mp_pose.PoseLandmark.LEFT_KNEE.value].y, landmarks[mp_pose.PoseLandmark.LEFT_KNEE.value].z]
@@ -52,8 +54,8 @@ def process_video(video_source):
                 ankle_l = [landmarks[mp_pose.PoseLandmark.LEFT_ANKLE.value].x, landmarks[mp_pose.PoseLandmark.LEFT_ANKLE.value].y, landmarks[mp_pose.PoseLandmark.LEFT_ANKLE.value].z]
                 ankle_r = [landmarks[mp_pose.PoseLandmark.RIGHT_ANKLE.value].x, landmarks[mp_pose.PoseLandmark.RIGHT_ANKLE.value].y, landmarks[mp_pose.PoseLandmark.RIGHT_ANKLE.value].z]
                 
-                hip_angle_l = calculate_angle_3d(hip_l, knee_l, ankle_l)
-                hip_angle_r = calculate_angle_3d(hip_r, knee_r, ankle_r)
+                hip_angle_l = calculate_angle_3d(shoulder_l, hip_l, knee_l)
+                hip_angle_r = calculate_angle_3d(shoulder_r, hip_r, knee_r)
                 knee_angle_l = calculate_angle_3d(hip_l, knee_l, ankle_l)
                 knee_angle_r = calculate_angle_3d(hip_r, knee_r, ankle_r)
                 ankle_angle_l = calculate_angle_3d(knee_l, ankle_l, [ankle_l[0], ankle_l[1], ankle_l[2] - 0.1])
@@ -67,6 +69,7 @@ def process_video(video_source):
             except:
                 pass
             
+            image = cv2.resize(image, (800, 600))
             image = Image.fromarray(image)
             image = ImageTk.PhotoImage(image)
             video_label.config(image=image)
@@ -96,6 +99,7 @@ def analyze_csv():
 # GUI Setup
 root = tk.Tk()
 root.title("Gait Analysis")
+root.geometry("1000x800")
 root.configure(bg='#1e1e1e')
 
 frame = tk.Frame(root, bg='#252526')
@@ -104,7 +108,7 @@ frame.pack(fill=tk.BOTH, expand=True, padx=20, pady=20)
 title_label = tk.Label(frame, text="Gait Analysis Tool", fg="white", bg="#252526", font=("Helvetica", 16))
 title_label.pack(pady=10)
 
-video_label = tk.Label(frame, text="No Video", fg="gray", bg="#000000", width=80, height=20)
+video_label = tk.Label(frame, text="No Video", fg="gray", bg="#000000", width=100, height=30)
 video_label.pack(pady=10)
 
 live_button = tk.Button(frame, text="Live Feed", padx=10, pady=5, fg="white", bg="#007acc", command=start_live_feed)
