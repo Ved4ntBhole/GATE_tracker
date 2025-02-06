@@ -203,39 +203,47 @@ root = tk.Tk()
 root.title("Gait Analysis")
 root.geometry("1000x800")
 root.configure(bg="#1e1e1e")
-root.attributes('-fullscreen', True)
 
 style = ttk.Style()
-style.configure("TNotebook", background="#1e1e1e")
+style.theme_use('alt')  # Ensure a fully customizable theme
+style.configure("TNotebook", background="#1e1e1e", borderwidth=0)
+style.configure("TNotebook.Tab", font=("Helvetica", 14, "bold"), padding=[20, 10], background="#000000", foreground="white")
+style.map("TNotebook.Tab", background=[("selected", "#007acc"), ("active", "#005f99")], foreground=[("selected", "white"), ("active", "white")])
 style.configure("TFrame", background="#252526")
 
 notebook = ttk.Notebook(root, style="TNotebook")
-notebook.pack(fill=tk.BOTH, expand=True)
+notebook.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
 
 # Video and Live Feed Tab
 video_tab = ttk.Frame(notebook, style="TFrame")
 notebook.add(video_tab, text="Video Analysis")
 
-frame = tk.Frame(video_tab, bg='#252526')
+frame = tk.Frame(video_tab, bg="#2d2d30", relief="groove", bd=2)
 frame.pack(fill=tk.BOTH, expand=True, padx=20, pady=20)
 
-title_label = tk.Label(frame, text="Gait Analysis Tool", fg="white", bg="#252526", font=("Helvetica", 16))
+title_label = tk.Label(frame, text="Gait Analysis Tool", fg="white", bg="#2d2d30", font=("Helvetica", 16, "bold"))
 title_label.pack(pady=10)
 
-video_label = tk.Label(frame, text="No Video", fg="gray", bg="#000000", width=CANVAS_WIDTH // 10, height=CANVAS_HEIGHT // 20)
+video_label = tk.Label(frame, text="No Video", fg="gray", bg="#1e1e1e", width=40, height=10, relief="sunken", bd=1)
 video_label.pack(pady=10)
 
-live_button = tk.Button(frame, text="Live Feed", padx=10, pady=5, fg="white", bg="#007acc", command=start_live_feed)
-live_button.pack(pady=5)
+live_button = tk.Button(frame, text="Live Feed", padx=10, pady=5, fg="white", bg="#007acc", font=("Helvetica", 12, "bold"), relief="raised", command=start_live_feed)
+live_button.pack(pady=10)
 
-file_button = tk.Button(frame, text="Analyze Video", padx=10, pady=5, fg="white", bg="#007acc", command=open_file)
-file_button.pack(pady=5)
+file_button = tk.Button(frame, text="Analyze Video", padx=10, pady=5, fg="white", bg="#007acc", font=("Helvetica", 12, "bold"), relief="raised", command=open_file)
+file_button.pack(pady=10)
 
 # Data Analysis Tab
 data_tab = ttk.Frame(notebook, style="TFrame")
 notebook.add(data_tab, text="Data Analysis")
 
-csv_button = tk.Button(data_tab, text="Upload CSV", padx=10, pady=5, fg="white", bg="#007acc", command=analyze_csv)
+data_frame = tk.Frame(data_tab, bg="#2d2d30", relief="groove", bd=2)
+data_frame.pack(fill=tk.BOTH, expand=True, padx=20, pady=20)
+
+data_label = tk.Label(data_frame, text="Data Analysis Tool", fg="white", bg="#2d2d30", font=("Helvetica", 16, "bold"))
+data_label.pack(pady=10)
+
+csv_button = tk.Button(data_frame, text="Upload CSV", padx=10, pady=5, fg="white", bg="#007acc", font=("Helvetica", 12, "bold"), relief="raised", command=analyze_csv)
 csv_button.pack(pady=10)
 
 root.mainloop()
